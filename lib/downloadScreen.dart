@@ -25,13 +25,15 @@ class _DownloadScreenState extends State<DownloadScreen> {
     // TODO: implement initState
     super.initState();
     downloadFile();
-    getPermission();
+    // getPermission();
   }
 
   Future<void> downloadFile() async {
+    // var imageDownloadPath = '${dir.path}/image.jpg';
+
     Dio dio = Dio();
     var dir = await getApplicationDocumentsDirectory();
-
+    var voiceDownloadPath = '${dir.path}/myvoice.mp3';
     try {
       await dio.download(Provider.of<MyAudio>(context, listen: false).url,
           "${dir.path}/myvoice.mp3", onReceiveProgress: (rec, total) {
@@ -40,7 +42,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
           downloading = true;
           progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
           // ignore: avoid_print
-          print("${dir.path}/myvoice.mp3()");
         });
       });
     } catch (e) {
@@ -52,6 +53,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       downloading = false;
       progressString = "Completed";
     });
+    // return
   }
 
   @override
@@ -84,6 +86,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
             : TextButton(
                 child: const Text("No data"),
                 onPressed: () {
+                  // print("${dir.path}/myvoice.mp3()");
                   Navigator.pop(context);
                   // assetsAudioPlayer.open(Audio.file("${widget.dir.path}/myvoice.mp3"));
                   // assetsAudioPlayer.open(Audio.file(dir));
@@ -93,5 +96,5 @@ class _DownloadScreenState extends State<DownloadScreen> {
     );
   }
 
-  void getPermission() {}
+  // void getPermission() {}
 }

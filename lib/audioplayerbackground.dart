@@ -4,6 +4,8 @@ import 'downloadScreen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'downloadScreen.dart';
 import 'Utilis.dart';
+import 'package:provider/provider.dart';
+import 'MyAudio.dart';
 
 class AudioplayerBackground extends StatefulWidget {
   const AudioplayerBackground({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class AudioplayerBackground extends StatefulWidget {
 
 class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
   final audioPlayer = AssetsAudioPlayer();
+  DownloadScreen downloadScreen = DownloadScreen();
   // DownloadScreen downloadScreen=DownloadScreen();
   // final Duration position = assetsAudioPlayer.currentPosition.value;
 
@@ -28,11 +31,12 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
     super.dispose();
   }
 
-  void function() {
+  Future<String> function() async {
     // String Position;
-    final Duration position = audioPlayer.currentPosition.value;
+
+    return audioPlayer.currentPosition.value.toString().split('.').first;
     // ignore: avoid_print
-    print(position.toString().split('.').first);
+    // print(position.toString().split('.').first);
   }
 
   void setUpPlayList() async {
@@ -154,13 +158,22 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
-                            Icons.share,
-                            color: Color(0xff2B2A67),
-                            size: 25,
+                          TextButton(
+                            onPressed: () {
+                              // audioPlayer
+                              //     .open(Audio.file(Utils().downloadFile()));
+                              // if(Utils.getFileUrl("myvoice.mp3")==null){}
+                            },
+                            child: const Icon(
+                              Icons.share,
+                              color: Color(0xff2B2A67),
+                              size: 25,
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
+                              // audioPlayer.open(Audio.file(Utils().downloadFile()));
+                              // Utils().downloadFile();
                               // function();
                               Navigator.push(
                                   context,
@@ -184,45 +197,60 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
                     const SizedBox(
                       height: 50,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-                      child: SliderTheme(
-                        data: const SliderThemeData(
-                          trackHeight: 5,
-                          thumbShape:
-                              RoundSliderThumbShape(enabledThumbRadius: 5),
-                        ),
-                        child: Slider(
-                            min: 0.0,
-                            max: 20,
-                            //Provider.of<MyAudio>(context, listen: false)
-                            //             .totalduration ==
-                            //         null
-                            //     ? 20
-                            //     : Provider.of<MyAudio>(context, listen: false)
-                            //         .totalduration
-                            //         .inMilliseconds
-                            //         .toDouble(),
-                            value: 0,
-                            //Provider.of<MyAudio>(context, listen: false)
-                            //             .position ==
-                            //         null
-                            //     ? 0
-                            //     : Provider.of<MyAudio>(context, listen: false)
-                            //         .position
-                            //         .inMilliseconds
-                            //         .toDouble(),
-                            // activeColor: Color(0xff2B2A67),
-                            inactiveColor: Colors.blue.withOpacity(0.3),
-                            onChanged: (value) {
-                              setState(() {
-                                // Provider.of<MyAudio>(context, listen: false)
-                                //     .seekAudio(
-                                //         Duration(milliseconds: value.toInt()));
-                              });
-                            }),
-                      ),
-                    ),
+                    FutureBuilder(
+                        future: Utils().downloadFile(),
+                        builder: (BuildContext context, AsyncSnapshot text) {
+                          return TextButton(
+                              onPressed: () {
+                                audioPlayer.open(Audio.file(text.data));
+                              },
+                              child: Text("offline"));
+                        }),
+                    // FutureBuilder(
+                    //     future: function(),
+                    //     builder: (BuildContext context, AsyncSnapshot text) {
+                    //       return Padding(
+                    //         padding:
+                    //             const EdgeInsets.only(right: 20.0, left: 20.0),
+                    //         child: SliderTheme(
+                    //           data: const SliderThemeData(
+                    //             trackHeight: 5,
+                    //             thumbShape: RoundSliderThumbShape(
+                    //                 enabledThumbRadius: 5),
+                    //           ),
+                    //           child: Slider(
+                    //               min: 0.0,
+                    //               max: 20,
+                    //               //Provider.of<MyAudio>(context, listen: false)
+                    //               //             .totalduration ==
+                    //               //         null
+                    //               //     ? 20
+                    //               //     : Provider.of<MyAudio>(context, listen: false)
+                    //               //         .totalduration
+                    //               //         .inMilliseconds
+                    //               //         .toDouble(),
+                    //               // ignore: prefer_if_null_operators
+                    //               value: 0,
+                    //               //Provider.of<MyAudio>(context, listen: false)
+                    //               //             .position ==
+                    //               //         null
+                    //               //     ? 0
+                    //               //     : Provider.of<MyAudio>(context, listen: false)
+                    //               //         .position
+                    //               //         .inMilliseconds
+                    //               //         .toDouble(),
+                    //               // activeColor: Color(0xff2B2A67),
+                    //               inactiveColor: Colors.blue.withOpacity(0.3),
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   // Provider.of<MyAudio>(context, listen: false)
+                    //                   //     .seekAudio(
+                    //                   //         Duration(milliseconds: value.toInt()));
+                    //                 });
+                    //               }),
+                    //         ),
+                    //       );
+                    //     }),
 
 //                     Padding(
 //                       padding: const EdgeInsets.only(right: 40.0, left: 40.0),
@@ -239,7 +267,32 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
 //                         ],
 //                       ),
 //                     ),
-
+                    // FutureBuilder(
+                    //     future: Provider.of<MyAudio>(context,listen: false).initAudio(),
+                    //     builder:
+                    // (BuildContext context, AsyncSnapshot<String> text) {
+                    // return
+////////////////////////////
+                    ///
+                    // Text(Provider.of<MyAudio>(context, listen: false)
+                    //     .position
+                    //     .toString()
+                    //     .split('.')
+                    //     .first),
+                    // Text(audioPlayer.currentPosition.value
+                    // .toString()
+                    // .split('.')
+                    // .first),
+                    // }),
+                    // AudioWidget.network(
+                    //     onReadyToPlay: (duration) {
+                    //       //onReadyToPlay
+                    //     },
+                    //     onPositionChanged: (current, duration) {
+                    //       //onPositionChanged
+                    //     },
+                    //     child:  Text(''),
+                    //     url: Provider.of<MyAudio>(context, listen: false).url),
                     const SizedBox(
                       height: 10.0,
                     ),
@@ -264,8 +317,11 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
                           ),
                           onTap: () {
                             isPlaying ? pausMusic() : playMusic();
-                            // AssetsAudioPlayer().open(Audio.file(
-                            //     Utils.getFileUrl("myvoice.mp3").toString()));
+                            // print(audioPlayer.currentPosition.value
+                            //     .toString()
+                            //     .split('.')
+                            //     .first);
+
                             // Provider.of<MyAudio>(context, listen: false)
                             //             .audioState ==
                             //         "Playing"
@@ -349,31 +405,27 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
 
 
 
-
-
-
-
-    // Scaffold(
-    //   body: Container(
-    //     alignment: Alignment.center,
-    //     child: audioPlayer.builderIsPlaying(
-    //         builder: (BuildContext context, isPlaying) {
-    //       return Row(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: [
-    //           IconButton(
-    //             onPressed: () => skipPrevious(),
-    //             icon: const Icon(Icons.skip_previous),
-    //           ),
-    //           IconButton(
-    //               onPressed: () => isPlaying ? pausMusic() : playMusic(),
-    //               icon: Icon(isPlaying ? Icons.pause : Icons.favorite)),
-    //           IconButton(
-    //             onPressed: () => skipNext(),
-    //             icon: const Icon(Icons.skip_next),
-    //           ),
-    //         ],
-    //       );
-    //     }),
-    //   ),
-    // );
+// Scaffold(
+//   body: Container(
+//     alignment: Alignment.center,
+//     child: audioPlayer.builderIsPlaying(
+//         builder: (BuildContext context, isPlaying) {
+//       return Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           IconButton(
+//             onPressed: () => skipPrevious(),
+//             icon: const Icon(Icons.skip_previous),
+//           ),
+//           IconButton(
+//               onPressed: () => isPlaying ? pausMusic() : playMusic(),
+//               icon: Icon(isPlaying ? Icons.pause : Icons.favorite)),
+//           IconButton(
+//             onPressed: () => skipNext(),
+//             icon: const Icon(Icons.skip_next),
+//           ),
+//         ],
+//       );
+//     }),
+//   ),
+// );
