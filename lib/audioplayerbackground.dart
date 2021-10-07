@@ -198,11 +198,15 @@ class _AudioplayerBackgroundState extends State<AudioplayerBackground> {
                       height: 50,
                     ),
                     FutureBuilder(
-                        future: Utils().downloadFile(),
+                        future: Utils().saveFile(),
                         builder: (BuildContext context, AsyncSnapshot text) {
                           return TextButton(
                               onPressed: () {
-                                audioPlayer.open(Audio.file(text.data));
+                                // audioPlayer.open(
+                                //     Audio.file("/storage/emulated/0/myvoice"));
+                                audioPlayer.open(
+                                    Audio.file(text.data + "/myvoic.mp3"));
+                                print(text.data + "/myvoic.mp3");
                               },
                               child: Text("offline"));
                         }),
